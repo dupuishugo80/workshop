@@ -1,23 +1,23 @@
 {
-    "manifest_version": 3,
-    "name": "Test.com Link Checker",
-    "version": "1.0",
-    "description": "Alerte si un lien vers test.com est présent sur la page",
-    "permissions": [
-      "activeTab",
-      "scripting"
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ]
-  }
-  
+  "manifest_version": 3,
+  "name": "Link Scanner",
+  "version": "1.0",
+  "description": "Scanne tous les liens de la page et les affiche dans un tableau.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Scan Links",
+    "default_icon": {
+      "128" : "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
