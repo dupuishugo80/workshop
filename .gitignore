@@ -1,0 +1,25 @@
+
+###> symfony/framework-bundle ###
+/dashboard/.env.local
+/dashboard/.env.local.php
+/dashboard/.env.*.local
+/dashboard/config/secrets/prod/prod.decrypt.private.php
+/dashboard/public/bundles/
+/dashboard/var/
+/dashboard/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/dashboard/phpunit.xml
+/dashboard/.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+/dashboard/.phpunit.result.cache
+/dashboard/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
+/dashboard/public/assets/
+/dashboard/assets/vendor/
+###< symfony/asset-mapper ###
