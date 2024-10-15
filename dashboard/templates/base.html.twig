@@ -21,20 +21,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
-                        <span class="visually-hidden">(current)</span>
-                    </a>
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_perso' %}active {% endif %}" href="/perso">Statistiques</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_signalement' %}active {% endif %}" href="/signalement">Emettre un signalement</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link" href="/logout">Déconnexion</a>
                     </li>
+                {% else %}
                     <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="/login">Login</a>
                     </li>
+                {% endif %}
                 </ul>
                 </div>
             </div>
