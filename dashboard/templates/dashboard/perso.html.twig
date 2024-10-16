@@ -9,6 +9,7 @@
         max-width: 800px; 
         width: 95%; 
         font: 18px/1.5 sans-serif; 
+        background-color: #e6f7ff; /* Couleur de fond de l'exemple */
     }
     .example-wrapper code { 
         background: #F5F5F5; 
@@ -27,42 +28,144 @@
     }
     table th {
         background-color: #f2f2f2;
+        cursor: pointer; /* Indique que les colonnes sont cliquables */
     }
     table tr:nth-child(even) {
         background-color: #f9f9f9;
     }
+    .toggle-sort {
+        margin-bottom: 20px; /* Espace entre le bouton et le tableau */
+    }
 </style>
 
 <div class="example-wrapper">
-    <h1>Bienvenue sur ta page personnelle </h1>
+    <h1>Bienvenue sur ta page personnelle</h1>
+
+    <!-- Bouton pour activer/désactiver le tri -->
+    <div class="toggle-sort">
+        <button id="toggleSort">Activer le tri</button>
+    </div>
     
-    <!-- Tableau simple -->
-    <table>
+    <!-- Tableau avec DataTables -->
+    <table id="myDataTable" class="display">
         <thead>
             <tr>
-                <th>Nom de l'alterte : </th>
-                <th>Lien masqué : </th>
+                <th>Nom de l'alerte</th>
+                <th>Lien masqué</th>
                 <th>Email</th>
-            
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>1</td>
-                <td>Jean Dupont</td>
-                <td>jean.dupont@example.com</td>
+                <td>Alerte 5</td>
+                <td>David Noyer</td>
+                <td>david.noyer@example.com</td>
             </tr>
             <tr>
-                <td>2</td>
+                <td>Alerte 2</td>
                 <td>Marie Durand</td>
                 <td>marie.durand@example.com</td>
             </tr>
             <tr>
-                <td>3</td>
+                <td>Alerte 3</td>
                 <td>Paul Martin</td>
                 <td>paul.martin@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 1</td>
+                <td>Jean Dupont</td>
+                <td>jean.dupont@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 8</td>
+                <td>Clara Petit</td>
+                <td>clara.petit@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 10</td>
+                <td>François Dupont</td>
+                <td>francois.dupont@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 6</td>
+                <td>Isabelle Martin</td>
+                <td>isabelle.martin@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 4</td>
+                <td>Lucie Lemaitre</td>
+                <td>lucie.lemaitre@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 7</td>
+                <td>Thierry Dupuis</td>
+                <td>thierry.dupuis@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 9</td>
+                <td>Émilie Leroux</td>
+                <td>emilie.leroux@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 12</td>
+                <td>Olivier Bernard</td>
+                <td>olivier.bernard@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 11</td>
+                <td>Céline Renaud</td>
+                <td>celine.renaud@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 14</td>
+                <td>Maxime Durand</td>
+                <td>maxime.durand@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 13</td>
+                <td>Anne Martin</td>
+                <td>anne.martin@example.com</td>
+            </tr>
+            <tr>
+                <td>Alerte 15</td>
+                <td>Sophie Dubois</td>
+                <td>sophie.dubois@example.com</td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<!-- jQuery et DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialiser DataTable avec le tri désactivé
+        var table = $('#myDataTable').DataTable({
+            "ordering": false // Désactiver le tri par défaut
+        });
+
+        // État pour savoir si le tri est activé ou non
+        var sortEnabled = false;
+
+        // Gestionnaire d'événement pour le bouton
+        $('#toggleSort').on('click', function() {
+            sortEnabled = !sortEnabled; // Inverser l'état
+
+            if (sortEnabled) {
+                // Activer le tri
+                table.ordering(true); // Activer le tri
+                $(this).text('Désactiver le tri'); // Mettre à jour le texte du bouton
+            } else {
+                // Désactiver le tri
+                table.ordering(false); // Désactiver le tri
+                table.order([]).draw(); // Dessiner sans trier
+                $(this).text('Activer le tri'); // Mettre à jour le texte du bouton
+            }
+        });
+    });
+</script>
+
 {% endblock %}
