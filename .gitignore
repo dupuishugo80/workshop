@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+/dashboard/.env
 /dashboard/.env.local
 /dashboard/.env.local.php
 /dashboard/.env.*.local
