@@ -9,12 +9,15 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Emettre un signalement</h1>
+    {{ form_errors(threatForm) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Ecole/workshop/dashboard/src/Controller/SignalementController.php</code></li>
-        <li>Your template at <code>C:/Ecole/workshop/dashboard/templates/signalement/index.html.twig</code></li>
-    </ul>
+    {{ form_start(threatForm) }}
+        {{ form_row(threatForm.url) }}
+        {{ form_widget(threatForm.added_date) }}
+        {{ form_row(threatForm.type) }}
+        
+        <button type="submit" class="btn">Soumettre</button>
+    {{ form_end(threatForm) }}
 </div>
 {% endblock %}
