@@ -4,11 +4,65 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .example-wrapper { 
+        margin: 1em auto; 
+        max-width: 800px; 
+        width: 95%; 
+        font: 18px/1.5 sans-serif; 
+    }
+    .example-wrapper code { 
+        background: #F5F5F5; 
+        padding: 2px 6px; 
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+    table th, table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+    table th {
+        background-color: #f2f2f2;
+    }
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 </style>
 
 <div class="example-wrapper">
-    <h1>Bienvenue sur ta page personnelle</h1>
+    <h1>Bienvenue sur ta page personnelle </h1>
+    
+    <!-- Tableau simple -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de l'alterte : </th>
+                <th>Lien masqué : </th>
+                <th>Email</th>
+            
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Jean Dupont</td>
+                <td>jean.dupont@example.com</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Marie Durand</td>
+                <td>marie.durand@example.com</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Paul Martin</td>
+                <td>paul.martin@example.com</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 {% endblock %}
