@@ -66,7 +66,7 @@ document.getElementById('checkLinks').addEventListener('click', () => {
                 
                 getApiRequestResult(payload)
                     .then(result => {
-                        console.log(result);
+                        highlightMaliciousLinks(result);
                         displayResults(result);
                     })
                     .catch(error => {
@@ -131,10 +131,6 @@ async function getApiRequestResult(payload) {
 
         result = response.json();
 
-        console.log(result);
-
-        highlightMaliciousLinks(result);
-
         return result;
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'appel API :", error);
@@ -175,8 +171,9 @@ function displayResults(result) {
     }
 }
 
-function highlightMaliciousLinks(result) {
+async function highlightMaliciousLinks(result) {
     if (result && result.matches && result.matches.length > 0) {
+
         result.matches.forEach(match => {
             const url = match.threat.url;
 
