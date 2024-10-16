@@ -129,7 +129,13 @@ async function getApiRequestResult(payload) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.json();
+        result = response.json();
+
+        console.log(result);
+
+        highlightMaliciousLinks(result);
+
+        return result;
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'appel API :", error);
         throw error;
@@ -145,7 +151,7 @@ function displayResults(result) {
             const url = match.threat.url;
             const threatType = match.threatType;
             const platformType = match.platformType;
-            
+
             const threatColor = ThreatTypes[threatType].color;
             const threatTypeLabel = ThreatTypes[threatType].label; // Récupérer le label de menace
             const platformTypeLabel = PlatformTypes[platformType].label; // Récupérer le label de plateforme
@@ -166,6 +172,28 @@ function displayResults(result) {
                 <td colspan="4" style="text-align: center;">Aucun résultat correspondant trouvé.</td>
             </tr>
         `;
+    }
+}
+
+function highlightMaliciousLinks(result) {
+    if (result && result.matches && result.matches.length > 0) {
+        result.matches.forEach(match => {
+            const url = match.threat.url;
+
+            // Récupérer tous les liens sur la page
+            const links = document.querySelectorAll('a');
+
+            links.forEach(link => {
+                if (link.href === url) {
+                    link.style.color = 'red'; // Change la couleur du lien en rouge
+                    link.setAttribute('title', 'Alerte : Ce lien est potentiellement dangereux.'); // Message d'alerte au survol
+
+                    // Optionnel : Ajouter une classe CSS pour le style
+                    link.classList.add('malicious-link');
+                }
+            });
+            
+        });
     }
 }
 
