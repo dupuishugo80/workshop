@@ -8,8 +8,21 @@
 <body>
     <h1>Vérificateur de Liens</h1>
     <button id="checkLinks">Vérifier les Liens</button>
-    <div id="results"></div>
+    <table id="linkTable">
+      <thead>
+          <tr>
+              <th>Domaine</th>
+              <th>Type de menace</th>
+              <th>Plateforme</th>
+          </tr>
+      </thead>
+      <tbody id="linkList">
+          <!-- Les résultats s'afficheront ici -->
+      </tbody>
+    </table>
+    
 
     <script src="popup.js"></script>
 </body>
 </html>
+

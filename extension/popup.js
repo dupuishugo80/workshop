@@ -1,19 +1,23 @@
 const ThreatTypes = Object.freeze({
     MALWARE: {
         value: "MALWARE",
-        label: "Malware"
+        label: "Malware",
+        color: "#dc3545" // Rouge
     },
     SOCIAL_ENGINEERING: {
         value: "SOCIAL_ENGINEERING",
-        label: "Ingénierie sociale"
+        label: "Ingénierie sociale",
+        color: "#ffc107" // Jaune
     },
     UNWANTED_SOFTWARE: {
         value: "UNWANTED_SOFTWARE",
-        label: "Logiciel indésirable"
+        label: "Logiciel indésirable",
+        color: "#17a2b8" // Cyan
     },
     POTENTIALLY_HARMFUL_APPLICATION: {
         value: "POTENTIALLY_HARMFUL_APPLICATION",
-        label: "Application potentiellement nuisible"
+        label: "Application potentiellement nuisible",
+        color: "#fd7e14" // Orange
     }
 });
 
@@ -133,36 +137,44 @@ async function getApiRequestResult(payload) {
 }
 
 function displayResults(result) {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = "";
+    const resultsTableBody = document.getElementById('linkList');
+    resultsTableBody.innerHTML = ""; // Vider le corps du tableau
 
     if (result && result.matches && result.matches.length > 0) {
         result.matches.forEach(match => {
             const url = match.threat.url;
             const threatType = match.threatType;
             const platformType = match.platformType;
-            const cacheDuration = match.cacheDuration;
+            
+            const threatColor = ThreatTypes[threatType].color;
+            const threatTypeLabel = ThreatTypes[threatType].label; // Récupérer le label de menace
+            const platformTypeLabel = PlatformTypes[platformType].label; // Récupérer le label de plateforme
 
-            const threatTypeLabel = ThreatTypes[threatType].label;
-            const platformTypeLabel = PlatformTypes[platformType].label;
-
-            const resultItem = document.createElement('div');
-            resultItem.classList.add('result-item');
-            resultItem.innerHTML = `
-                <strong>URL :</strong> ${url} <br>
-                <strong>Type de menace :</strong> ${threatTypeLabel} <br>
-                <strong>Plateforme :</strong> ${platformTypeLabel} <br>
-                <strong>Durée de mise en cache :</strong> ${cacheDuration} <br>
-                <hr>
+            // Créer une nouvelle ligne dans le tableau
+            const resultRow = document.createElement('tr');
+            resultRow.innerHTML = `
+                <td>${getDomain(url)}</td>
+                <td style="color: ${threatColor}">${threatTypeLabel}</td>
+                <td>${platformTypeLabel}</td>
             `;
-            resultsDiv.appendChild(resultItem);
+            resultsTableBody.appendChild(resultRow); // Ajouter la ligne au corps du tableau
         });
     } else {
-        resultsDiv.innerHTML = "<p>Aucun résultat correspondant trouvé.</p>";
+        // Si aucun résultat n'est trouvé, afficher un message dans le tableau
+        resultsTableBody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center;">Aucun résultat correspondant trouvé.</td>
+            </tr>
+        `;
     }
 }
 
 function displayError(message) {
     const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = `<p style="color: red;">${message}</p>`;
+}
+
+function getDomain(url) {
+    const urlObj = new URL(url);
+    return urlObj.hostname; // Retourner seulement le nom de domaine
 }

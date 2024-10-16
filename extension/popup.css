@@ -61,3 +61,47 @@ button {
 button:hover {
     background-color: #0056b3; /* Couleur plus sombre au survol */
 }
+
+/* Style général du tableau */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Fusionner les bordures */
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+th, td {
+    padding: 12px; /* Espacement autour du texte */
+    text-align: left; /* Alignement du texte à gauche */
+}
+
+th {
+    background-color: #007bff; /* Couleur d'arrière-plan pour l'en-tête */
+    color: #ffffff; /* Couleur du texte de l'en-tête */
+    font-weight: bold; /* Texte en gras pour l'en-tête */
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Couleur de fond pour les lignes paires */
+}
+
+tr:hover {
+    background-color: #e0e0e0; /* Couleur de fond pour la ligne au survol */
+    cursor: pointer; /* Changer le curseur lors du survol */
+}
+
+a {
+    color: #007bff; /* Couleur des liens */
+    text-decoration: none; /* Supprimer le soulignement des liens */
+}
+
+a:hover {
+    text-decoration: underline; /* Souligner les liens au survol */
+}
+
+/* Style pour les messages */
+td[colspan="4"] {
+    text-align: center; /* Centrer le texte dans la cellule */
+    font-style: italic; /* Italique pour le message */
+    color: #666; /* Couleur du texte */
+}
