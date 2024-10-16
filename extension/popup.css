@@ -106,12 +106,12 @@ td[colspan="4"] {
     color: #666; /* Couleur du texte */
 }
 
-/* Optionnel : Styles pour les liens malveillants */
 .malicious-link {
-    color: red !important; /* Force la couleur rouge */
-    text-decoration: underline; /* Sous-ligne le lien */
+    color: red !important;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .malicious-link:hover {
-    background-color: rgba(255, 0, 0, 0.1); /* Légère couleur de fond au survol */
+    background-color: rgba(255, 0, 0, 0.1); /* Couleur de fond légère au survol */
 }

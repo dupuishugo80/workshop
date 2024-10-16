@@ -66,8 +66,8 @@ document.getElementById('checkLinks').addEventListener('click', () => {
                 
                 getApiRequestResult(payload)
                     .then(result => {
-                        highlightMaliciousLinks(result);
                         displayResults(result);
+                        chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
                     })
                     .catch(error => {
                         console.error("Erreur lors de l'appel API :", error);
