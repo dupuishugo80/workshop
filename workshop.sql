@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 16 oct. 2024 à 14:13
+-- Généré le : mer. 16 oct. 2024 à 15:04
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -39,7 +39,31 @@ CREATE TABLE `doctrine_migration_versions` (
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
 ('DoctrineMigrations\\Version20241015081748', '2024-10-15 10:17:58', 49),
-('DoctrineMigrations\\Version20241016081042', '2024-10-16 10:11:12', 103);
+('DoctrineMigrations\\Version20241016081042', '2024-10-16 10:11:12', 103),
+('DoctrineMigrations\\Version20241016130106', '2024-10-16 15:01:26', 82);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `warning_type` int(11) NOT NULL,
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `logs`
+--
+
+INSERT INTO `logs` (`id`, `user_id`, `url`, `warning_type`, `date`) VALUES
+(1, 1, 'http://test.com', 2, '2024-10-16 15:01:43'),
+(2, 1, 'http://google.fr', 1, '2024-10-16 15:02:03'),
+(3, 2, 'http://tttt.fr', 3, '2024-10-16 15:04:09');
 
 -- --------------------------------------------------------
 
@@ -120,7 +144,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`) VALUES
-(1, 'test@test.fr', '[]', '$2y$13$YI6omkP0fpZIile5nUawM.aNPUUgkBDYTjYndOxEzOKDqKgc5tMf2');
+(1, 'test@test.fr', '[]', '$2y$13$YI6omkP0fpZIile5nUawM.aNPUUgkBDYTjYndOxEzOKDqKgc5tMf2'),
+(2, 'test2@test.fr', '[]', '$2y$13$f5FwJ5GOvbBX5jkHvNDpa.jrFAv8tPzBymQIGA7/GZZ312wEXc6Am');
 
 --
 -- Index pour les tables déchargées
@@ -131,6 +156,13 @@ INSERT INTO `user` (`id`, `email`, `roles`, `password`) VALUES
 --
 ALTER TABLE `doctrine_migration_versions`
   ADD PRIMARY KEY (`version`);
+
+--
+-- Index pour la table `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F08FC65CA76ED395` (`user_id`);
 
 --
 -- Index pour la table `messenger_messages`
@@ -166,6 +198,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT pour la table `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT pour la table `messenger_messages`
 --
 ALTER TABLE `messenger_messages`
@@ -187,11 +225,17 @@ ALTER TABLE `type_threat`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `logs`
+--
+ALTER TABLE `logs`
+  ADD CONSTRAINT `FK_F08FC65CA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Contraintes pour la table `threat`
