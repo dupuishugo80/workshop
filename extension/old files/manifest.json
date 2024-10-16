@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Test.com Link Checker",
+    "version": "1.0",
+    "description": "Alerte si un lien vers test.com est présent sur la page",
+    "permissions": [
+      "activeTab",
+      "scripting"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
