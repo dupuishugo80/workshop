@@ -12,15 +12,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         getApiRequestResult(payload)
             .then(result => {
-                console.log(result); // Affiche le résultat dans la console
-                sendResponse(result); // Envoie le résultat au contexte appelant
+                console.log(result);
+                sendResponse(result);
             })
             .catch(error => {
                 console.error("Erreur lors de l'appel API :", error);
-                sendResponse({ error: "Erreur lors de l'appel API" }); // Envoie une erreur au contexte appelant
+                sendResponse({ error: "Erreur lors de l'appel API" });
             });
 
-        // Indiquer à Chrome que nous allons envoyer une réponse de manière asynchrone
         return true; 
     }
 });
@@ -66,7 +65,7 @@ function getPayload() {
 }
 
 async function getApiRequestResult(payload) {
-    const apiKey = 'TA_CLE_API'; // Remplace par ta clé API
+    const apiKey = 'AIzaSyDh3_VV1-PBuVAYvODAv73fMxbcL4ey5Bo';
     const url = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`;
 
     try {
@@ -80,16 +79,16 @@ async function getApiRequestResult(payload) {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer",
-            body: JSON.stringify(payload), // Sérialiser le payload en JSON pour l'envoi
+            body: payload,
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.json(); // Retourner la réponse JSON
+        return response.json();
     } catch (error) {
         console.error("Une erreur s'est produite lors de l'appel API :", error);
-        throw error; // Propager l'erreur pour qu'elle soit capturée dans l'écouteur
+        throw error;
     }
 }
