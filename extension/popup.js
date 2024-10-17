@@ -1,4 +1,10 @@
 const ThreatTypes = Object.freeze({
+    SAFE: {
+        value: "SAFE",
+        label: "SAFE",
+        color: "#dc3545", // Green
+        warning_level: 0
+    },
     MALWARE: {
         value: "MALWARE",
         label: "Malware",
@@ -35,8 +41,9 @@ document.getElementById('checkLinks').addEventListener('click', () => {
 
                 getApiRequestResult(payload)
                     .then(async result => {
-                        result += await getSafeLinks(payload, result);
-                        console.log("result :", result);
+                        let safeLinks = await getSafeLinks(payload, result);
+                        safeLinks.forEach(link => result.matches.push(link));
+                        console.log("Résultat de l'API :", result);
                         displayResults(result);
                         chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
                     })
@@ -66,6 +73,9 @@ function getPayload(links) {
                 ThreatTypes.SOCIAL_ENGINEERING.value,
                 ThreatTypes.UNWANTED_SOFTWARE.value,
                 ThreatTypes.POTENTIALLY_HARMFUL_APPLICATION.value
+            ],
+            platformTypes: [
+                "ANY_PLATFORM"
             ],
             threatEntryTypes: ["URL"],
             threatEntries: threatArray
@@ -124,7 +134,7 @@ async function getSafeLinks(payload, result) {
 
 async function checkSafeLink(url) {
     try {
-        const response = await fetch(`http://localhost:8000/signalement/checkurl?url=${encodeURIComponent(url)}`, {
+        const response = await fetch(`http://localhost:8000/signalement/checkurl?url=${url}`, {
             method: "GET",
             mode: "cors",
             cache: "no-cache",
@@ -157,10 +167,12 @@ function formatThreatResult(url, threatData) {
     // Vérifier les menaces dans un ordre de priorité : malware, phishing, puis virus
     if (threatData.malware > 0) {
         threatType = ThreatTypes.MALWARE.value;
-    } else if (threatData.phishing > 0) {
-        threatType = ThreatTypes.PHISHING.value;
-    } else if (threatData.virus > 0) {
+    } else if (threatData.social_engineering > 0) {
+        threatType = ThreatTypes.SOCIAL_ENGINEERING.value;
+    } else if (threatData.unwanted_software > 0) {
         threatType = ThreatTypes.UNWANTED_SOFTWARE.value;
+    }else if (threatData.potentially_harmful_application > 0) {
+        threatType = ThreatTypes.POTENTIALLY_HARMFUL_APPLICATION.value;
     }
 
     // Retourner l'objet formaté
@@ -176,7 +188,14 @@ function displayResults(result) {
 
     if (result && result.matches && result.matches.length > 0) {
         result.matches.forEach(match => {
-            const url = match.threat.url;
+            if(match.threatType === "SAFE") return; // Ne pas afficher les liens sûrs
+            let url = "";
+            if(match.threat){
+                url = match.threat.url;
+            }else{
+                url = match.url;
+            }
+            
             const threatType = match.threatType;
 
             const threatColor = ThreatTypes[threatType].color;
@@ -187,7 +206,6 @@ function displayResults(result) {
             resultRow.innerHTML = `
                 <td>${getDomain(url)}</td>
                 <td style="color: ${threatColor}">${threatTypeLabel}</td>
-                <td>${platformTypeLabel}</td>
             `;
             resultsTableBody.appendChild(resultRow); // Ajouter la ligne au corps du tableau
         });
@@ -205,7 +223,12 @@ async function highlightMaliciousLinks(result) {
     if (result && result.matches && result.matches.length > 0) {
 
         result.matches.forEach(match => {
-            const url = match.threat.url;
+            let url = "";
+            if(match.threat){
+                url = match.threat.url;
+            }else{
+                url = match.url;
+            }
 
             // Récupérer tous les liens sur la page
             const links = document.querySelectorAll('a');

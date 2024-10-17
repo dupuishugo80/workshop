@@ -27,7 +27,12 @@ function highlightMaliciousLinks(result) {
     console.log(result);
     if (result && result.matches && result.matches.length > 0) {
         result.matches.forEach(match => {
-            const url = match.threat.url;
+            let url = "";
+            if(match.threat){
+                url = match.threat.url;
+            }else{
+                url = match.url;
+            }
             const threatType = match.threatType;
 
             if (threatType === 'MALWARE' || threatType === 'SOCIAL_ENGINEERING' || threatType === 'UNWANTED_SOFTWARE' || threatType === 'POTENTIALLY_HARMFUL_APPLICATION') {
