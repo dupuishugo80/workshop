@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\LogsRepository;
+use App\Repository\TypeThreatRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +14,11 @@ class DashboardController extends AbstractController
     private $security;
     private $logRepository;
 
-    public function __construct(Security $security, LogsRepository $logRepository)
+    public function __construct(Security $security, LogsRepository $logRepository, TypeThreatRepository $typeThreatRepository)
     {
         $this->security = $security;
         $this->logRepository = $logRepository;
+        $this->typeThreatRepository = $typeThreatRepository;
     }
 
     #[Route('/', name: 'app_index')]
@@ -38,15 +40,21 @@ class DashboardController extends AbstractController
 
         // Si l'utilisateur est connecté, récupérer ses logs
         if ($user) {
+            // Récupérer les logs de l'utilisateur connecté avec leurs types de menace
             $logs = $this->logRepository->findBy(['user' => $user]);
+            $threat = $this->typeThreatRepository->findAll();
+
+            // Optionnel: Si tu souhaites filtrer ou manipuler les logs ici, tu peux le faire
         } else {
             $logs = [];
         }
 
-        // Envoyer les logs à la vue
+        // Envoyer les logs à la vue, incluant les informations sur les types de menace
         return $this->render('dashboard/perso.html.twig', [
             'controller_name' => 'DashboardController',
-            'logs' => $logs,  // On envoie les logs à la vue Twig
+            'logs' => $logs,  // Envoie des logs et des informations de type menace à la vue
+            'threatsList' => $threat,
         ]);
     }
 }
+
