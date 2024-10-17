@@ -2,22 +2,26 @@ const ThreatTypes = Object.freeze({
     MALWARE: {
         value: "MALWARE",
         label: "Malware",
-        color: "#dc3545" // Rouge
+        color: "#dc3545", // Rouge
+        warning_level: 1
     },
     SOCIAL_ENGINEERING: {
         value: "SOCIAL_ENGINEERING",
         label: "Ingénierie sociale",
-        color: "#ffc107" // Jaune
+        color: "#ffc107", // Jaune
+        warning_level: 2
     },
     UNWANTED_SOFTWARE: {
         value: "UNWANTED_SOFTWARE",
         label: "Logiciel indésirable",
-        color: "#17a2b8" // Cyan
+        color: "#17a2b8", // Cyan
+        warning_level: 3
     },
     POTENTIALLY_HARMFUL_APPLICATION: {
         value: "POTENTIALLY_HARMFUL_APPLICATION",
         label: "Application potentiellement nuisible",
-        color: "#fd7e14" // Orange
+        color: "#fd7e14", // Orange
+        warning_level: 4
     }
 });
 
@@ -108,7 +112,7 @@ function getPayload(links) {
 }
 
 async function getApiRequestResult(payload) {
-    const apiKey = 'AIzaSyDh3_VV1-PBuVAYvODAv73fMxbcL4ey5Bo'; // Remplace par ta clé API
+    const apiKey = 'AIzaSyDh3_VV1-PBuVAYvODAv73fMxbcL4ey5Bo';
     const url = `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`;
 
     try {
@@ -128,6 +132,8 @@ async function getApiRequestResult(payload) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        //TODO : filtrer les lien non malicieux et regarder si ils sont flags dans l'api
 
         result = response.json();
 
