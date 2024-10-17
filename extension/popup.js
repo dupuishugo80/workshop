@@ -67,9 +67,11 @@ document.getElementById('checkLinks').addEventListener('click', () => {
 
             if (response && response.links) {
                 const payload = getPayload(response.links);
-                
+
                 getApiRequestResult(payload)
                     .then(result => {
+                        safeLinks = getSafeLinks(payload, result);
+                        console.log("safeLinks :", safeLinks);
                         displayResults(result);
                         chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
                     })
@@ -142,6 +144,71 @@ async function getApiRequestResult(payload) {
         console.error("Une erreur s'est produite lors de l'appel API :", error);
         throw error;
     }
+}
+
+async function getSafeLinks(payload, result) {
+    const maliciousLinks = result.matches ? result.matches.map(match => match.threat.url) : [];
+
+    const allLinks = payload.threatInfo.threatEntries.map(entry => entry.url);
+
+    const safeLinks = allLinks.filter(link => !maliciousLinks.includes(link));
+
+    result = [];
+
+    safeLinks.forEach(link => {
+        result += checkSafeLink(link)
+    });
+    
+    return result;
+}
+
+async function checkSafeLink(url) {
+    try {
+        const response = await fetch(`/signalement/checkurl?url=${encodeURIComponent(url)}`, {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer"
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const resultAPI = await response.json();
+
+        result = await formatThreatResult(url, resultAPI);
+
+        return result;
+    } catch (error) {
+        console.error(`Erreur lors de la vérification de l'URL ${url}:`, error);
+        throw error;
+    }
+}
+
+function formatThreatResult(url, threatData) {
+    // Initialiser le type de menace par défaut à "SAFE"
+    let threatType = "SAFE";
+
+    // Vérifier les menaces dans un ordre de priorité : malware, phishing, puis virus
+    if (threatData.malware > 0) {
+        threatType = "MALWARE";
+    } else if (threatData.phishing > 0) {
+        threatType = "PHISHING";
+    } else if (threatData.virus > 0) {
+        threatType = "VIRUS";
+    }
+
+    // Retourner l'objet formaté
+    return {
+        url: url,
+        value: threatType
+    };
 }
 
 function displayResults(result) {
