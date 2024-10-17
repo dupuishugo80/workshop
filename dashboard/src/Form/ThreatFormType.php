@@ -15,9 +15,6 @@ class ThreatFormType extends AbstractType
     {
         $builder
             ->add('url')
-            ->add('added_date', null, [
-                'widget' => 'single_text',
-            ])
             ->add('type', EntityType::class, [
                 'class' => TypeThreat::class,
                 'choice_label' => 'name',
