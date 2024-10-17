@@ -13,6 +13,7 @@ class DashboardController extends AbstractController
 {
     private $security;
     private $logRepository;
+    private $typeThreatRepository;
 
     public function __construct(Security $security, LogsRepository $logRepository, TypeThreatRepository $typeThreatRepository)
     {
@@ -41,8 +42,18 @@ class DashboardController extends AbstractController
         // Si l'utilisateur est connecté, récupérer ses logs
         if ($user) {
             // Récupérer les logs de l'utilisateur connecté avec leurs types de menace
-            $logs = $this->logRepository->findBy(['user' => $user]);
-            $threat = $this->typeThreatRepository->findAll();
+            $logs = $this->logRepository->findBy(criteria: ['user' => $user]);
+            $threatTypes = $this->typeThreatRepository->findAll();
+
+            $threatTypeMap = [];
+            foreach ($threatTypes as $type) {
+                $threatTypeMap[$type->getWarningLevel()] = $type->getName();
+            }
+
+            // Ajouter le nom du type de menace à chaque log
+            foreach ($logs as $log) {
+                $log->threatName = $threatTypeMap[$log->getWarningType()] ?? 'Unknown';
+            }
 
             // Optionnel: Si tu souhaites filtrer ou manipuler les logs ici, tu peux le faire
         } else {
@@ -53,7 +64,6 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/perso.html.twig', [
             'controller_name' => 'DashboardController',
             'logs' => $logs,  // Envoie des logs et des informations de type menace à la vue
-            'threatsList' => $threat,
         ]);
     }
 }
