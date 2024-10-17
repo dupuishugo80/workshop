@@ -22,6 +22,8 @@ class SignalementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $date_now = new \DateTime();
+            $threat->setAddedDate($date_now);
             $entityManager->persist($threat);
             $entityManager->flush();
             return $this->redirectToRoute('app_perso');
