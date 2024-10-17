@@ -69,8 +69,8 @@ document.getElementById('checkLinks').addEventListener('click', () => {
                 const payload = getPayload(response.links);
 
                 getApiRequestResult(payload)
-                    .then(result => {
-                        safeLinks = getSafeLinks(payload, result);
+                    .then(async result => {
+                        let safeLinks = await getSafeLinks(payload, result);
                         console.log("safeLinks :", safeLinks);
                         displayResults(result);
                         chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
@@ -153,18 +153,16 @@ async function getSafeLinks(payload, result) {
 
     const safeLinks = allLinks.filter(link => !maliciousLinks.includes(link));
 
-    result = [];
+    const results = await Promise.all(safeLinks.map(async link => {
+        return await checkSafeLink(link);
+    }));
 
-    safeLinks.forEach(link => {
-        result += checkSafeLink(link)
-    });
-    
-    return result;
+    return results;
 }
 
 async function checkSafeLink(url) {
     try {
-        const response = await fetch(`/signalement/checkurl?url=${encodeURIComponent(url)}`, {
+        const response = await fetch(`http://localhost:8000/signalement/checkurl?url=${encodeURIComponent(url)}`, {
             method: "GET",
             mode: "cors",
             cache: "no-cache",
@@ -182,8 +180,7 @@ async function checkSafeLink(url) {
 
         const resultAPI = await response.json();
 
-        result = await formatThreatResult(url, resultAPI);
-
+        let result = formatThreatResult(url, resultAPI);
         return result;
     } catch (error) {
         console.error(`Erreur lors de la vérification de l'URL ${url}:`, error);
@@ -194,7 +191,7 @@ async function checkSafeLink(url) {
 function formatThreatResult(url, threatData) {
     // Initialiser le type de menace par défaut à "SAFE"
     let threatType = "SAFE";
-
+    
     // Vérifier les menaces dans un ordre de priorité : malware, phishing, puis virus
     if (threatData.malware > 0) {
         threatType = "MALWARE";
