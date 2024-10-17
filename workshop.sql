@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 16 oct. 2024 à 15:04
+-- Généré le : mer. 16 oct. 2024 à 15:52
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -63,7 +63,8 @@ CREATE TABLE `logs` (
 INSERT INTO `logs` (`id`, `user_id`, `url`, `warning_type`, `date`) VALUES
 (1, 1, 'http://test.com', 2, '2024-10-16 15:01:43'),
 (2, 1, 'http://google.fr', 1, '2024-10-16 15:02:03'),
-(3, 2, 'http://tttt.fr', 3, '2024-10-16 15:04:09');
+(3, 2, 'http://tttt.fr', 3, '2024-10-16 15:04:09'),
+(4, 1, 'test.com', 1, '2024-10-16 15:50:22');
 
 -- --------------------------------------------------------
 
@@ -201,7 +202,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `messenger_messages`
