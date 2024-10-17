@@ -25,41 +25,6 @@ const ThreatTypes = Object.freeze({
     }
 });
 
-const PlatformTypes = Object.freeze({
-    WINDOWS: {
-        value: "WINDOWS",
-        label: "Windows"
-    },
-    MACOS: {
-        value: "MACOS",
-        label: "macOS"
-    },
-    LINUX: {
-        value: "LINUX",
-        label: "Linux"
-    },
-    ANDROID: {
-        value: "ANDROID",
-        label: "Android"
-    },
-    IOS: {
-        value: "IOS",
-        label: "iOS"
-    },
-    ANY_PLATFORM: {
-        value: "ANY_PLATFORM",
-        label: "Toute plateforme"
-    },
-    WEB: {
-        value: "WEB",
-        label: "Web"
-    },
-    CLOUD: {
-        value: "CLOUD",
-        label: "Cloud"
-    }
-});
-
 document.getElementById('checkLinks').addEventListener('click', () => {
 
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -70,8 +35,8 @@ document.getElementById('checkLinks').addEventListener('click', () => {
 
                 getApiRequestResult(payload)
                     .then(async result => {
-                        let safeLinks = await getSafeLinks(payload, result);
-                        console.log("safeLinks :", safeLinks);
+                        result += await getSafeLinks(payload, result);
+                        console.log("result :", result);
                         displayResults(result);
                         chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
                     })
@@ -101,9 +66,6 @@ function getPayload(links) {
                 ThreatTypes.SOCIAL_ENGINEERING.value,
                 ThreatTypes.UNWANTED_SOFTWARE.value,
                 ThreatTypes.POTENTIALLY_HARMFUL_APPLICATION.value
-            ],
-            platformTypes: [
-                PlatformTypes.ANY_PLATFORM.value
             ],
             threatEntryTypes: ["URL"],
             threatEntries: threatArray
@@ -194,17 +156,17 @@ function formatThreatResult(url, threatData) {
     
     // Vérifier les menaces dans un ordre de priorité : malware, phishing, puis virus
     if (threatData.malware > 0) {
-        threatType = "MALWARE";
+        threatType = ThreatTypes.MALWARE.value;
     } else if (threatData.phishing > 0) {
-        threatType = "PHISHING";
+        threatType = ThreatTypes.PHISHING.value;
     } else if (threatData.virus > 0) {
-        threatType = "VIRUS";
+        threatType = ThreatTypes.UNWANTED_SOFTWARE.value;
     }
 
     // Retourner l'objet formaté
     return {
         url: url,
-        value: threatType
+        threatType: threatType
     };
 }
 
@@ -216,11 +178,9 @@ function displayResults(result) {
         result.matches.forEach(match => {
             const url = match.threat.url;
             const threatType = match.threatType;
-            const platformType = match.platformType;
 
             const threatColor = ThreatTypes[threatType].color;
             const threatTypeLabel = ThreatTypes[threatType].label; // Récupérer le label de menace
-            const platformTypeLabel = PlatformTypes[platformType].label; // Récupérer le label de plateforme
 
             // Créer une nouvelle ligne dans le tableau
             const resultRow = document.createElement('tr');
