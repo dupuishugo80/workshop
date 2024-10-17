@@ -4,8 +4,83 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    body {
+        font-family: Arial, sans-serif; /* Police sans-serif */
+        margin: 0; /* Suppression des marges par défaut */
+        padding: 0; /* Suppression des espacements par défaut */
+        color: #000; /* Couleur du texte en noir pour tout le corps */
+    }
+
+    .example-wrapper {
+        margin: 2em auto; /* Centrage et marge autour du formulaire */
+        max-width: 600px; /* Largeur maximale du formulaire */
+        width: 90%; /* Largeur responsive */
+        padding: 2em; /* Espacement interne */
+        background-color: #ffffff; /* Couleur de fond du formulaire */
+        border-radius: 8px; /* Coins arrondis */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    }
+
+    h1 {
+        color: #007BFF; /* Couleur du titre */
+        margin-bottom: 1.5em; /* Espacement sous le titre */
+        text-align: center; /* Centrage du titre */
+    }
+
+    .form-row {
+        margin-bottom: 1.5em; /* Espacement entre les champs */
+    }
+
+    label {
+        font-weight: bold; /* Texte des étiquettes en gras */
+        margin-bottom: 0.5em; /* Espacement sous les étiquettes */
+        display: block; /* Permet d'afficher les étiquettes sur une nouvelle ligne */
+        color: #000; /* Couleur des étiquettes en noir */
+    }
+
+    /* Cible les champs de texte, URL, et de type */
+    input[type="text"], 
+    input[type="url"], 
+    select {
+        width: 100%; /* Largeur complète des champs */
+        padding: 0.75em; /* Espacement interne */
+        border: 1px solid #00000; /* Bordure avec couleur bleue */
+        border-radius: 4px; /* Coins arrondis */
+        transition: border-color 0.6s; /* Animation de changement de couleur de bordure */
+        box-sizing: border-box; /* Prise en compte des bordures dans la largeur totale */
+        color: #00000; /* Couleur du texte dans les champs en noir */
+    }
+
+    input[type="text"]:focus, 
+    input[type="url"]:focus, 
+    select:focus {
+        border-color: #00000; /* Changement de couleur de bordure au focus */
+        outline: none; /* Suppression du contour par défaut */
+    }
+
+    .btn {
+        display: block; /* Affiche le bouton en bloc */
+        width: 100%; /* Largeur complète */
+        background-color: #000000; /* Couleur de fond du bouton */
+        color: #ffffff; /* Couleur du texte en blanc */
+        padding: 0.75em; /* Espacement interne */
+        border: none; /* Suppression de la bordure */
+        border-radius: 4px; /* Coins arrondis */
+        cursor: pointer; /* Curseur en main */
+        transition: background-color 0.3s; /* Animation de changement de couleur */
+        font-size: 16px; /* Taille de police */
+        font-weight: bold; /* Texte du bouton en gras */
+        margin-top: 1em; /* Espacement au-dessus du bouton */
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Couleur de fond au survol */
+    }
+
+    .error-message {
+        color: #e74c3c; /* Couleur des messages d'erreur */
+        margin-top: 0.5em; /* Espacement au-dessus des messages d'erreur */
+    }
 </style>
 
 <div class="example-wrapper">
@@ -13,8 +88,12 @@
     {{ form_errors(threatForm) }}
 
     {{ form_start(threatForm) }}
-        {{ form_row(threatForm.url) }}
-        {{ form_row(threatForm.type) }}
+        <div class="form-row">
+            {{ form_row(threatForm.url) }}
+        </div>
+        <div class="form-row">
+            {{ form_row(threatForm.type) }}
+        </div>
         
         <button type="submit" class="btn">Soumettre</button>
     {{ form_end(threatForm) }}
