@@ -1,8 +1,8 @@
 const ThreatTypes = Object.freeze({
     SAFE: {
         value: "SAFE",
-        label: "SAFE",
-        color: "#dc3545", // Green
+        label: "Safe",
+        color: "#34A853", // Green
         warning_level: 0
     },
     MALWARE: {
