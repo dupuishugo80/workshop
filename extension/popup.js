@@ -43,7 +43,10 @@ document.getElementById('checkLinks').addEventListener('click', () => {
                     .then(async result => {
                         let safeLinks = await getSafeLinks(payload, result);
                         safeLinks.forEach(link => result.matches.push(link));
-                        console.log("Résultat de l'API :", result);
+                        result.matches.forEach(async match => {
+                            if(match.threatType === "SAFE") return; // Ne pas afficher les liens sûrs
+                            await sendLogs(match);
+                        });
                         displayResults(result);
                         chrome.tabs.sendMessage(tabs[0].id, {message: 'highlightMaliciousLinks', data: result});
                     })
@@ -58,6 +61,58 @@ document.getElementById('checkLinks').addEventListener('click', () => {
         });
     });
 });
+
+async function sendLogs(data){
+    let email = "";
+    chrome.storage.local.get("email", async (result) => {
+        email = result.email;
+        const api = `http://localhost:8000/logs/add`;
+
+        let url = "";
+        if(data.threat){
+            url = data.threat.url;
+        }else{
+            url = data.url;
+        }
+        const threatType = data.threatType;
+        const warning_level = ThreatTypes[threatType].warning_level;
+
+        const postpayload = {
+            email: email,
+            warning_level: warning_level,
+            url: url
+        };
+        console.log(JSON.stringify(postpayload));
+        try {
+            const response = await fetch(api, {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify(postpayload),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            //TODO : filtrer les lien non malicieux et regarder si ils sont flags dans l'api
+    
+            result = response.json();
+    
+            return result;
+        } catch (error) {
+            console.error("Une erreur s'est produite lors de l'appel API :", error);
+            throw error;
+        }
+    });
+
+}
 
 function getPayload(links) {
     const threatArray = links.map(url => ({ url }));
