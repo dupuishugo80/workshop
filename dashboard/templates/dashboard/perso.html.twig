@@ -6,30 +6,80 @@
 <style>
     .example-wrapper {
         margin: 1em auto;
-        max-width: 800px;
-        width: 95%;
+        max-width: 900px;
+        width: 100%;
         font: 18px/1.5 sans-serif;
+        background-color: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .example-wrapper code {
-        background: #F5F5F5;
-        padding: 2px 6px;
+
+    h1 {
+        font-family: 'Arial', sans-serif;
+        font-size: 28px;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+        background-color: #333;
+        padding: 10px;
+        border-radius: 8px;
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
         margin: 20px 0;
-        font-size: 18px;
+        font-size: 16px;
         text-align: left;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #333; /* Fond noir pour les bordures du tableau */
+        color: black; /* Texte noir */
     }
+
     table th, table td {
-        padding: 12px;
-        border: 1px solid #ddd;
+        padding: 15px;
+        border-bottom: 1px solid #ddd; /* Bordures plus claires */
+        text-align: center;
+        background-color: #f5f5f5; /* Fond clair pour les cellules */
+        color: black; /* Texte noir pour les cellules */
     }
+
     table th {
-        background-color: #f2f2f2;
+        background-color: #ddd; /* Couleur des en-têtes de colonnes (clair) */
+        color: black; /* Texte noir */
+        cursor: pointer;
     }
+
     table tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: #eee; /* Pour les lignes paires (clair) */
+    }
+
+    table tr:hover {
+        background-color: #ccc; /* Effet hover (clair) */
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: black !important;
+        background-color: transparent;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #555;
+        color: white !important;
+    }
+
+    .dataTables_filter input {
+        padding: 8px;
+        margin-left: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
     }
 </style>
 
@@ -37,7 +87,7 @@
     <h1>Bienvenue sur ta page personnelle</h1>
 
     <!-- Tableau des logs de l'utilisateur -->
-    <table id="logsTable">
+    <table id="logsTable" class="display">
         <thead>
             <tr>
                 <th>ID</th>
@@ -63,12 +113,31 @@
     </table>
 </div>
 
-<!-- Intégration de DataTables -->
+<!-- Scripts DataTables -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
 <script>
     $(document).ready(function() {
         $('#logsTable').DataTable({
-            "order": [[ 0, "asc" ]]  // Trier par ID par défaut
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "order": [[0, 'asc']],
+            "info": true,
+            "pageLength": 5,
+            "language": {
+                "paginate": {
+                    "previous": "Précédent",
+                    "next": "Suivant"
+                },
+                "search": "Rechercher:",
+                "lengthMenu": "Afficher _MENU_ entrées par page",
+                "info": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                "infoEmpty": "Aucune entrée disponible",
+                "infoFiltered": "(filtré à partir de _MAX_ entrées au total)"
+            }
         });
     });
 </script>
